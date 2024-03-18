@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>welcome</title>
+    <style>
+        #h1{
+            color: blue;
+        }
+        #div1{
+            width: 100%;
+            height: 70px;
+            background:url("top.jpg");
+        }
+    </style>
+    <script>
+        function download(){
+            window.location.href="/mycontroller/download?ids=123,456";
+        }
+    </script>
+</head>
+<body>
+    <div id="div1">
+    </div>
+    <h1 id="h1">welcome to shuoyishuo.com.cn!</h1>
+    <img src="tree.jpeg">
+    <input type="button" name="" value="下载" onclick="download()">
+
+</body>
+</html>
