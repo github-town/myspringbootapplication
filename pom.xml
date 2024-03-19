@@ -6,6 +6,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>my-springboot-first-application</module>
+        <module>my-springboot-admin</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
