@@ -18,13 +18,19 @@
 		<spring-cloud.version>Hoxton.SR8</spring-cloud.version>
 	</properties>
 	<dependencies>
-
+		<!--springboottest依赖-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>junit</artifactId>
+					<groupId>junit</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-
+		<!--springcloud gateway依赖-->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-gateway</artifactId>
@@ -57,7 +63,8 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>4.12</version>
+			<scope>test</scope>
 		</dependency>
 
 		<!--admin client的依赖-->
@@ -67,7 +74,7 @@
 			<version>2.5.1</version>
 		</dependency>
 	</dependencies>
-
+	<!--统一管理springcloud版本配置-->
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
