@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.ref.*;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ import java.util.List;
 public class MyService implements IMyService {
 
     private MyServiceB myServiceB;
+
+    private static final ReferenceQueue<Object> REFERENCE_QUEUE = new ReferenceQueue<>();
 
     @Autowired
     ApplicationContext context;
@@ -43,9 +46,47 @@ public class MyService implements IMyService {
     public String service1(String port){
         System.out.println("myappname : " + context.getEnvironment().getProperty("appname"));
         System.out.println("myappname @value: " + myappName);
+        System.out.println("CPU count : " + Runtime.getRuntime().availableProcessors());
         myServiceB.pringB();
-//        MyServiceB myServiceB1 = new MyServiceB();
         return "service1 方法执行。。。 -- 当前端口为 ： " + port;
+    }
+
+    @Override
+    public String referenceTest() {
+        SoftReference softReference = new SoftReference(new ExcelPojo());
+        System.out.println("softReference get : " + softReference.get());
+
+        WeakReference weakReference = new WeakReference(new ExcelPojo());
+        System.out.println("weakReference get : " + weakReference.get());
+
+        System.gc();
+        try {
+            Thread.currentThread().sleep(500);
+        } catch (InterruptedException ex) {
+            log.error("sleep error", ex);
+        }
+        System.out.println("after gc, softReference get : " + softReference.get());
+        System.out.println("after gc, weakReference get : " + weakReference.get());
+
+        // phantomreference
+        PhantomReference<ExcelPojo> phantomReference = new PhantomReference<>(new ExcelPojo(), REFERENCE_QUEUE);
+        System.gc();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            log.error("sleep error", ex);
+        }
+        Reference<?> poll1 = REFERENCE_QUEUE.poll();
+        System.out.println("referenceQueue.poll().get() one: "+ poll1);
+        Reference<?> poll2 = REFERENCE_QUEUE.poll();
+        System.out.println("referenceQueue.poll().get() two: "+ poll2);
+        System.out.println("phantomReference get : " + phantomReference.get());
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            log.error("sleep error", ex);
+        }
+        return "<h1>referenceTest success</h1>";
     }
 
     @Override

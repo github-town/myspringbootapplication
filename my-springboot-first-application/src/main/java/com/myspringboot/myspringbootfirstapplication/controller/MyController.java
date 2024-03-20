@@ -30,6 +30,11 @@ public class MyController {
         return myService.service1(port);
     }
 
+    @GetMapping("/referencetest")
+    public String referencetest() {
+        return myService.referenceTest();
+    }
+
     @GetMapping("/download")
     public void download(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "ids", required = false) String ids) throws IOException {
         myService.downLoadExcel(request, response);

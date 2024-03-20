@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
+@Slf4j
 public class ExcelPojo {
 
     @ExcelProperty("序号")
@@ -23,7 +25,8 @@ public class ExcelPojo {
 
     private String abc;
 
-
-
-
+    @Override
+    protected void finalize() throws Throwable {
+        log.info("ExcelPojo 对象被回收了。。。");
+    }
 }

@@ -7,6 +7,8 @@ import java.io.IOException;
 public interface IMyService {
     String service1(String port);
 
+    String referenceTest();
+
     void downLoadExcel(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
     void myServicePring();
