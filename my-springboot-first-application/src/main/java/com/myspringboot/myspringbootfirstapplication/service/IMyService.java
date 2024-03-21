@@ -14,4 +14,6 @@ public interface IMyService {
     void myServicePring();
 
     String callBaidu(String url);
+
+    String restTemplateTest();
 }

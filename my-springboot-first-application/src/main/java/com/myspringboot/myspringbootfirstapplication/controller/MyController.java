@@ -25,9 +25,14 @@ public class MyController {
 
     @GetMapping("/service1")
     public String controller1() {
-        System.out.println("System.getenv : " + System.getenv());
+        System.out.println("System.getProperties.getport : " + System.getProperties().get("server.port"));
         String port = environment.getProperty("server.port");
         return myService.service1(port);
+    }
+
+    @GetMapping("/restTemplateTest")
+    public String restTemplateTest() {
+        return myService.restTemplateTest();
     }
 
     @GetMapping("/referencetest")

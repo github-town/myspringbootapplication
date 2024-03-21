@@ -8,8 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,8 +40,14 @@ public class MyService implements IMyService {
     @Autowired
     ApplicationContext context;
 
+    @Resource
+    RestTemplate restTemplateMy;
+
     @Value("${appname}")
     String myappName;
+
+    @Value("${server.port}")
+    String port;
 
     @Autowired
     public void setMyService(MyServiceB myServiceB) {
@@ -49,6 +61,27 @@ public class MyService implements IMyService {
         System.out.println("CPU count : " + Runtime.getRuntime().availableProcessors());
         myServiceB.pringB();
         return "service1 方法执行。。。 -- 当前端口为 ： " + port;
+    }
+
+    @Override
+    public String restTemplateTest() {
+        String url = new StringBuffer("http://localhost:").append(port).append("/mycontroller/service1").toString();
+        System.out.println("restTemplate call url: " + url);
+        try {
+            ResponseEntity<String> response = restTemplateMy.exchange(url, HttpMethod.GET, HttpEntity.EMPTY, String.class, new HashMap<>());
+            if (response != null) {
+                if (response.getStatusCodeValue() == 200) {
+                    return response.getBody();
+                } else {
+                    return "restTemplateTest failed, statusCode : " + response.getStatusCodeValue();
+                }
+            } else {
+                return "restTemplateTest failed, statusCode : " + response.getStatusCodeValue();
+            }
+        } catch (RestClientException ex) {
+            log.error("restTemplateTest failed", ex);
+            return ex.getMessage();
+        }
     }
 
     @Override
