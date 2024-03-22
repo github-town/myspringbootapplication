@@ -49,6 +49,9 @@ public class MyService implements IMyService {
     @Value("${server.port}")
     String port;
 
+    @Value("${restTemplate.url.firstApplication}")
+    String firstApplicationUrl;
+
     @Autowired
     public void setMyService(MyServiceB myServiceB) {
         this.myServiceB = myServiceB;
@@ -59,13 +62,14 @@ public class MyService implements IMyService {
         System.out.println("myappname : " + context.getEnvironment().getProperty("appname"));
         System.out.println("myappname @value: " + myappName);
         System.out.println("CPU count : " + Runtime.getRuntime().availableProcessors());
+        System.out.println("java.library.path : " + System.getProperty("java.library.path"));
         myServiceB.pringB();
         return "service1 方法执行。。。 -- 当前端口为 ： " + port;
     }
 
     @Override
     public String restTemplateTest() {
-        String url = new StringBuffer("http://localhost:").append(port).append("/mycontroller/service1").toString();
+        String url = new StringBuffer(firstApplicationUrl).append("/mycontroller/service1").toString();
         System.out.println("restTemplate call url: " + url);
         try {
             ResponseEntity<String> response = restTemplateMy.exchange(url, HttpMethod.GET, HttpEntity.EMPTY, String.class, new HashMap<>());

@@ -6,7 +6,7 @@ spring:
     gateway:
       routes:
       - id: firstroute
-        uri: http://localhost:8082
+        uri: lb://my-springboot-firstApplication
         predicates:
         - Path=/mygateway/**
         filters:
@@ -16,19 +16,24 @@ spring:
             rate-limiter: "#{@defaultRateLimiter}"
             key-resolver: "#{@userKeyResolver}"
             default-rate-limit.permitsPerSecond: 5
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
   application:
     name: my-springboot-gateway
-  boot:
-    admin:
-      client:
-        url: http://localhost:8081
+#  boot:
+#    admin:
+#      client:
+#        url: http://localhost:8081
 
 management:
   endpoints:
     web:
       exposure:
         include: health,info
-      base-path: /myactuator
+      base-path: /actuator
   endpoint:
     health:
       show-details: always
