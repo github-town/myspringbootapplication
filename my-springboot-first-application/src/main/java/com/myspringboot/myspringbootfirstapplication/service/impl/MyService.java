@@ -28,6 +28,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Service
@@ -36,6 +37,10 @@ public class MyService implements IMyService {
     private MyServiceB myServiceB;
 
     private static final ReferenceQueue<Object> REFERENCE_QUEUE = new ReferenceQueue<>();
+
+    private static volatile Integer integer = 0;
+
+    private static final ThreadLocal<String> threadLocal = new ThreadLocal<>();
 
     @Autowired
     ApplicationContext context;
@@ -194,6 +199,66 @@ public class MyService implements IMyService {
         }
     }
 
+    @Override
+    public String automicIntegerTest(int count) {
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        Thread threadA = new Thread(() -> {
+            int ct = 0;
+            while (ct++ < count) {
+                atomicInteger.incrementAndGet();
+            }
+        }
+        );
+        Thread threadB = new Thread(() -> {
+            int ct = 0;
+            while (ct++ < count) {
+                atomicInteger.incrementAndGet();
+            }
+        }
+        );
+        threadA.start();
+        threadB.start();
+        try {
+            threadA.join();
+            threadB.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return String.valueOf("atomicInteger : " + atomicInteger.get());
+    }
 
+    @Override
+    public String integerTest(int count) {
+        integer = 0;
+        Thread threadA = new Thread(() -> {
+            int ct = 0;
+            while (ct++ < count) {
+                integer++;
+            }
+        }
+        );
+        Thread threadB = new Thread(() -> {
+            int ct = 0;
+            while (ct++ < count) {
+                integer++;
+            }
+        }
+        );
+        threadA.start();
+        threadB.start();
+        try {
+            threadA.join();
+            threadB.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return String.valueOf("integer : " + integer);
+    }
 
+    @Override
+    public String threadLocalTest(String value) {
+        threadLocal.set(value);
+        System.gc();
+        return String.valueOf(threadLocal.get());
+    }
 }

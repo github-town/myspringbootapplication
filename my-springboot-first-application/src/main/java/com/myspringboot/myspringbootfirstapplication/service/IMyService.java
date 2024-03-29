@@ -16,4 +16,10 @@ public interface IMyService {
     String callBaidu(String url);
 
     String restTemplateTest();
+
+    String automicIntegerTest(int count) throws InterruptedException;
+
+    String integerTest(int count) throws InterruptedException;
+
+    String threadLocalTest(String value);
 }

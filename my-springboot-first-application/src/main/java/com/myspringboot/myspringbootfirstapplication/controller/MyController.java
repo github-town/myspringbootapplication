@@ -3,14 +3,12 @@ package com.myspringboot.myspringbootfirstapplication.controller;
 import com.myspringboot.myspringbootfirstapplication.service.impl.MyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.websocket.server.PathParam;
 import java.io.IOException;
 
 @RestController
@@ -48,5 +46,20 @@ public class MyController {
     @GetMapping("/baiduIndex")
     public String baiduIndex(@RequestParam("url") String url) {
         return myService.callBaidu(url);
+    }
+
+    @GetMapping("/automicIntegerTest/{count}")
+    public String automicIntegerTest(@PathVariable("count") int count) {
+        return myService.automicIntegerTest(count);
+    }
+
+    @GetMapping("/integerTest/{count}")
+    public String integerTest(@PathVariable("count") int count) {
+        return myService.integerTest(count);
+    }
+
+    @GetMapping("/threadLocalTest/{value}")
+    public String threadLocalTest(@PathVariable("value") String value) {
+        return myService.threadLocalTest(value);
     }
 }
