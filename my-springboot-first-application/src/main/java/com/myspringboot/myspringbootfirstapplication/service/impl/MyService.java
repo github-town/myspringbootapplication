@@ -259,6 +259,35 @@ public class MyService implements IMyService {
     public String threadLocalTest(String value) {
         threadLocal.set(value);
         System.gc();
-        return String.valueOf(threadLocal.get());
+        String sesult = test05(value);
+        return threadLocal.get() + " : " + sesult;
+    }
+
+    public String test05(String abcd) {
+        // abcd
+        // abcd abdc acbd acdb adcb adbc bacd badc bcad bcda bdca bdac
+        List<String> result = new ArrayList<>();
+        char[] chars = abcd.toCharArray();
+
+        process2(chars, 0, result);
+        return result.toString();
+    }
+
+    private void process2(char[] chars, int k, List<String> result) {
+        if (k == chars.length - 1) {
+            result.add(String.valueOf(chars));
+            return;
+        }
+        for (int z = k; z < chars.length; z++) { // acbd acdb
+            swap(chars, z, k);
+            process2(chars, k + 1, result);
+            swap(chars, z, k);
+        }
+    }
+
+    private void swap(char[] chars, int i, int j) {
+        char temp = chars[i];
+        chars[i] = chars[j];
+        chars[j] = temp;
     }
 }
