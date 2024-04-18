@@ -1,6 +1,7 @@
 package com.myspringboot.myspringbootfirstapplication.service.impl;
 
 import com.alibaba.excel.EasyExcel;
+import com.google.common.collect.Lists;
 import com.myspringboot.myspringbootfirstapplication.domain.ExcelPojo;
 import com.myspringboot.myspringbootfirstapplication.service.IMyService;
 import com.myspringboot.myspringbootfirstapplication.util.HttpClientUtil;
@@ -28,6 +29,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -184,8 +186,9 @@ public class MyService implements IMyService {
     public String callBaidu(String url) {
 //        String url = "http://www.12306.cn/index";
 //        String url = "https://www.baidu.com";
+//        String url = "https://mashibing.com";
         try {
-            return HttpClientUtil.httpGet(url,new HashMap<>(),new HashMap<>(),60,false);
+            return HttpClientUtil.httpGet(url, new HashMap<>(), new HashMap<>(), 60000, false);
         } catch (URISyntaxException e) {
             log.error("error : {}",e);
             return "";

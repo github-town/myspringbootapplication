@@ -1,6 +1,7 @@
 package com.myspringboot.myspringbootfirstapplication.util;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpRequestRetryHandler;
@@ -44,6 +45,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class HttpClientUtil {
 
     /**
@@ -77,12 +79,11 @@ public class HttpClientUtil {
     static {
         if (connManager == null) {
             try {
-                // 创建ssl安全访问连接
-                // 获取创建ssl上下文对象
                 /**
-                 * 使用带证书的定制SSL访问
+                 * 使用带证书的定制SSL访问，
+                 * 这里使用百度官网的cer证书，通过cmd窗口命令生成：keytool -import -alias "myKeyStore" -file baidu.cer -keystore my.keystore
                  */
-                File authFile = new File("D:/WorkSpace/my-springboot-test/my-springboot-test-controller/src/main/resources/my12306.keystore");
+                File authFile = new File("D:/WorkSpace/my-springboot-test/my-springboot-test-controller/src/main/resources/mashibing.keystore");
                 SSLContext sslContext = getSSLContext(false, authFile, "mypassword");
 
                 // 注册
@@ -95,7 +96,6 @@ public class HttpClientUtil {
                 connManager = new PoolingHttpClientConnectionManager(registry);
                 connManager.setMaxTotal(1000);  // 连接池最大连接数
                 connManager.setDefaultMaxPerRoute(20);  // 每个路由最大连接数
-
             } catch (SSLInitializationException e) {
                 e.printStackTrace();
             } catch (KeyManagementException e) {
@@ -111,7 +111,6 @@ public class HttpClientUtil {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -162,9 +161,7 @@ public class HttpClientUtil {
                 }
             }
         }
-
         return sslContext;
-
     }
 
     /**
@@ -194,9 +191,7 @@ public class HttpClientUtil {
         if (null != params) {
             httpPost.setEntity(new UrlEncodedFormEntity(covertParams2NVPS(params), ENCODING));
         }
-
         return getResult(httpPost, timeOut, isStream);
-
     }
 
     /**
@@ -217,9 +212,7 @@ public class HttpClientUtil {
         if (null != params) {
             httpPost.setEntity(new UrlEncodedFormEntity(covertParams2NVPS(params), ENCODING));
         }
-
         return getResult(httpPost, timeOut, false);
-
     }
 
     /**
@@ -234,7 +227,6 @@ public class HttpClientUtil {
      * @throws UnsupportedEncodingException
      */
     public static String httpPost(String url, JSONObject headers, JSONObject params, Integer timeOut, boolean isStream) throws UnsupportedEncodingException {
-
         // 创建post请求
         HttpPost httpPost = new HttpPost(url);
 
@@ -249,9 +241,7 @@ public class HttpClientUtil {
         if (null != params) {
             httpPost.setEntity(new UrlEncodedFormEntity(covertParams2NVPS(params), ENCODING));
         }
-
         return getResult(httpPost, timeOut, isStream);
-
     }
 
     /**
@@ -272,9 +262,7 @@ public class HttpClientUtil {
         if (null != params) {
             httpPost.setEntity(new UrlEncodedFormEntity(covertParams2NVPS(params), ENCODING));
         }
-
         return getResult(httpPost, timeOut, false);
-
     }
 
     /**
@@ -334,7 +322,6 @@ public class HttpClientUtil {
      * @return
      */
     private static CloseableHttpClient getHttpClient(Integer timeOut) {
-
 //        if (httpClient == null) {
             // 配置请求参数
             RequestConfig requestConfig = RequestConfig.custom()
@@ -345,6 +332,7 @@ public class HttpClientUtil {
             // 配置超时回调机制
             HttpRequestRetryHandler retryHandler = new HttpRequestRetryHandler() {
                 public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
+                    log.info("retryRequest ...");
                     if (executionCount >= 3) {// 如果已经重试了3次，就放弃
                         return false;
                     }

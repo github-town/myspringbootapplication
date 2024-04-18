@@ -1,6 +1,7 @@
 package com.myspringboot.myspringbootfirstapplication.service;
 
 import org.junit.Test;
+import org.junit.experimental.theories.internal.ParameterizedAssertionError;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -36,6 +37,21 @@ public class MyServiceTest {
             System.out.println(accept.getRemoteAddress());
             String result = "success";
             accept.write(ByteBuffer.wrap(result.getBytes()));
+        }
+    }
+
+    @Test
+    public void test02() {
+        Integer i = 100;
+        Integer i2 = 100;
+        System.out.println(i==i2);
+
+        try {
+           int a =  1/0;
+        }catch (ParameterizedAssertionError error){
+            System.out.println("catched");
+        }finally {
+            System.out.println("fally runed");
         }
     }
 }
