@@ -1,5 +1,6 @@
 package com.myspringboot.myspringbootfirstapplication.service;
 
+import com.myspringboot.myspringbootfirstapplication.domain.ExcelPojo;
 import org.junit.Test;
 import org.junit.experimental.theories.internal.ParameterizedAssertionError;
 
@@ -53,5 +54,25 @@ public class MyServiceTest {
         }finally {
             System.out.println("fally runed");
         }
+    }
+
+    @Test
+    public void test03() {
+        ExcelPojo excelPojo = new ExcelPojo();
+        excelPojo.setName("pojo");
+        excelPojo.getArr().add("pojo");
+
+        ExcelPojo clone = excelPojo.clone();
+        System.out.println("name: " + excelPojo.getName() + "," + excelPojo);
+        System.out.println("name: " + clone.getName() + "," + clone);
+
+        System.out.println(excelPojo== clone);
+        System.out.println(excelPojo.equals(clone) );
+        System.out.println(excelPojo.hashCode() + "," + clone.hashCode());
+
+        excelPojo.setName("pojo123");
+        excelPojo.getArr().add("pojo123");
+        System.out.println("name: " + excelPojo.getName() + "," + excelPojo);
+        System.out.println("name: " + clone.getName() + "," + clone);
     }
 }
