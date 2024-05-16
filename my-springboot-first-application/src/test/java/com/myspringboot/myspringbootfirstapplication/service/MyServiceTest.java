@@ -9,6 +9,8 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.concurrent.atomic.AtomicStampedReference;
+import java.util.stream.Stream;
 
 public class MyServiceTest {
 
@@ -74,5 +76,77 @@ public class MyServiceTest {
         excelPojo.getArr().add("pojo123");
         System.out.println("name: " + excelPojo.getName() + "," + excelPojo);
         System.out.println("name: " + clone.getName() + "," + clone);
+    }
+
+    @Test
+    public void test04() {
+//        Stream<Integer> stream = Stream.of(100, 50, 20, 30, 100);
+//        Optional<Integer> reduce = stream.reduce((b,a) -> a +100);
+//        System.out.println(reduce.get());
+//
+//        IntStream intStream = IntStream.of(100, 50, 20, 30, 100);
+//        IntSummaryStatistics summaryStatistics = intStream.summaryStatistics();
+//        System.out.println("sum : "+summaryStatistics.getSum());
+//        System.out.println("average : "+summaryStatistics.getAverage());
+//
+//        ExcelPojo excelPojo1 = ExcelPojo.builder().id(100L).build();
+//        ExcelPojo excelPojo2 = ExcelPojo.builder().id(1L).build();
+//        ExcelPojo excelPojo3 = ExcelPojo.builder().id(50L).build();
+//        Stream<ExcelPojo> pojoStream = Stream.of(excelPojo1, excelPojo2, excelPojo3);
+//        pojoStream.sorted((o1, o2) -> (int) (o1.getId() - o2.getId())).forEach(System.out::println);
+//
+//        List<Integer> arr1 = Arrays.asList(1,2,3);
+//        List<Integer> arr2 = Arrays.asList(4,5,6);
+//        List<Integer> arr3 = Arrays.asList(7,8,9);
+//        Stream<List<Integer>> arrStream = Stream.of(arr1, arr2, arr3);
+//        arrStream.flatMap(a->a.stream().limit(2)).sorted().forEach(System.out::println);
+//
+//        Stream<List<Integer>> arrStream2 = Stream.of(arr1, arr2, arr3);
+//        List arrays = new ArrayList();
+//        arrStream2.peek(arrays::addAll).flatMap(a->a.stream().limit(1)).sorted().forEach(System.out::println);
+//        System.out.println("addAll list : "+arrays);
+//
+//        Stream<String> strStream = Stream.of("abc", "def", "efg");
+//        List<String> collect = strStream.map(String::toUpperCase).peek(System.out::print).collect(Collectors.toList());
+//        System.out.println(collect);
+
+        Stream<String> strStream2 = Stream.of("abc", "def", "efg");
+        strStream2.map(String::toUpperCase).peek(System.out::print).forEach(System.out::print);
+
+//        Stream<List<String>> strStream3 = Stream.of(Arrays.asList("abc","def","efg"),Arrays.asList("abc"),Arrays.asList("zzz"));
+//        strStream3.flatMap(st -> {
+//            System.out.println(st);
+//            return st.stream();
+//        }).forEach(System.out::println);
+    }
+
+    @Test
+    public void test05() {
+        AtomicStampedReference<Integer> reference = new AtomicStampedReference<Integer>(1, 1);
+        System.out.println("before : value=" + reference.getReference().intValue() + ",stamp : " + reference.getStamp());
+        reference.compareAndSet(reference.getReference().intValue(), reference.getReference().intValue()+1,
+                reference.getStamp(), reference.getStamp() + 1);
+        System.out.println("after : value=" + reference.getReference().intValue() + ",stamp : " + reference.getStamp());
+    }
+
+    @Test
+    public void test06() throws InterruptedException {
+        long l1 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+        Thread thread = new Thread(() -> {
+            try {
+                ByteBuffer allocate = ByteBuffer.allocate(1 * 1024 * 1024);
+                byte[] aaa = new byte[1 * 1024 * 1024];
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        thread.start();
+        Thread.sleep(500);
+        long l2 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+        System.out.println("total memory : " + Runtime.getRuntime().totalMemory());
+        System.out.println("before memory : " + l1);
+        System.out.println("after memory : " + l2);
+        System.out.println("thread memory : " + (l2 - l1));
     }
 }
