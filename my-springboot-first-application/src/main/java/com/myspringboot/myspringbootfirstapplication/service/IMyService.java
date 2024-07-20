@@ -11,6 +11,8 @@ public interface IMyService {
 
     void downLoadExcel(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
+    void downLoadExcelWithOutSaveFile(HttpServletRequest request, HttpServletResponse response) throws IOException;
+
     void myServicePring();
 
     String callBaidu(String url);

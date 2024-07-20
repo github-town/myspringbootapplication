@@ -1,11 +1,17 @@
 package com.myspringboot.myspringbootfirstapplication.service.impl;
 
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.metadata.data.WriteCellData;
+import com.alibaba.excel.write.handler.CellWriteHandler;
+import com.alibaba.excel.write.handler.context.CellWriteHandlerContext;
+import com.alibaba.excel.write.metadata.style.WriteCellStyle;
 import com.google.common.collect.Lists;
 import com.myspringboot.myspringbootfirstapplication.domain.ExcelPojo;
 import com.myspringboot.myspringbootfirstapplication.service.IMyService;
 import com.myspringboot.myspringbootfirstapplication.util.HttpClientUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -29,7 +35,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -173,6 +178,60 @@ public class MyService implements IMyService {
             byte[] buf = new byte[1024];
             while ((len = fileInputStream.read(buf, 0, 1024)) != -1) {
                 outputStream.write(buf, 0, len);
+            }
+        }
+    }
+
+    @Override
+    public void downLoadExcelWithOutSaveFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 写数据
+        List<ExcelPojo> pojos = new ArrayList<>();
+        for (long i = 1; i <= 100; i++) {
+            ExcelPojo excelPojo = new ExcelPojo();
+            excelPojo.setId(i);
+            excelPojo.setName("张同学" + i);
+            excelPojo.setSex(i % 2 == 0 ? "女" : "男");
+            pojos.add(excelPojo);
+        }
+
+        String fileNameEncode = URLEncoder.encode("人员记录导出" + ".xlsx", "utf-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/vnd.ms-excel;charset=utf-8");// 设置contentType为excel格式
+        response.setHeader("Content-Disposition", "Attachment;Filename=" + fileNameEncode);
+
+        List<Integer> lineIndexs = Lists.newArrayList(10, 20, 30, 40, 50);
+        CellWriteHandler cellWriteHandler = new CellWriteHandler() {
+            @Override
+            public void afterCellDispose(CellWriteHandlerContext context) {
+                if (!context.getHead()) {
+                    // get current row index
+                    Integer currentRowIndex = context.getRowIndex();
+                    // judge yellowRowIndex's
+                    if (lineIndexs.contains(currentRowIndex)) {
+                        WriteCellData<?> cellData = context.getFirstCellData();
+                        WriteCellStyle writeCellStyle = cellData.getOrCreateStyle();
+                        // set index color
+                        writeCellStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
+                        writeCellStyle.setFillPatternType(FillPatternType.SOLID_FOREGROUND);
+                    }
+                }
+            }
+        };
+
+        // 写出文件
+        ServletOutputStream responseOutputStream = response.getOutputStream();
+        try {
+            EasyExcel.write(responseOutputStream, ExcelPojo.class).sheet("学生")
+                    .registerWriteHandler(cellWriteHandler).doWrite(pojos);
+        } catch (Exception ex) {
+            log.error("excel导出错误", ex);
+        } finally {
+            if (responseOutputStream != null) {
+                try {
+                    responseOutputStream.close();
+                } catch (IOException ex) {
+                    log.error("excel导出错误", ex);
+                }
             }
         }
     }
