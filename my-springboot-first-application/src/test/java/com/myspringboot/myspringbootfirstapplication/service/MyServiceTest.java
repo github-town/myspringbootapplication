@@ -33,13 +33,33 @@ public class MyServiceTest {
 
     public static void main(String[] args) throws IOException {
         ServerSocketChannel channel = ServerSocketChannel.open();
+        channel.socket().setSoTimeout(60000);
+        channel.configureBlocking(true);
         channel.bind(new InetSocketAddress(9000));
         System.out.println("启动9000端口");
         for (;;){
             SocketChannel accept = channel.accept();
             System.out.println(accept.getRemoteAddress());
-            String result = "success";
-            accept.write(ByteBuffer.wrap(result.getBytes()));
+            try {
+                ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+                int read = 0;
+                read = accept.read(byteBuffer);
+                System.out.println(read);
+
+                String receive = new String(byteBuffer.array(), 0, byteBuffer.limit());
+                System.out.println("RECEIVED : " + receive);
+
+                StringBuilder stringBuilder = new StringBuilder("HTTP/1.1 200 OK\r\n");
+                stringBuilder.append("Content-Type:application/json\r\n");
+                stringBuilder.append("\r\n");
+                stringBuilder.append("success");
+
+                accept.write(ByteBuffer.wrap(stringBuilder.toString().getBytes()));
+                accept.shutdownOutput();
+                accept.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 

@@ -5,7 +5,6 @@ import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.write.handler.CellWriteHandler;
 import com.alibaba.excel.write.handler.context.CellWriteHandlerContext;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;
-import com.google.common.collect.Lists;
 import com.myspringboot.myspringbootfirstapplication.domain.ExcelPojo;
 import com.myspringboot.myspringbootfirstapplication.service.IMyService;
 import com.myspringboot.myspringbootfirstapplication.util.HttpClientUtil;
@@ -33,6 +32,7 @@ import java.lang.ref.*;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -199,7 +199,7 @@ public class MyService implements IMyService {
         response.setContentType("application/vnd.ms-excel;charset=utf-8");// 设置contentType为excel格式
         response.setHeader("Content-Disposition", "Attachment;Filename=" + fileNameEncode);
 
-        List<Integer> lineIndexs = Lists.newArrayList(10, 20, 30, 40, 50);
+        List<Integer> lineIndexs = Arrays.asList(10, 20, 30, 40, 50);
         CellWriteHandler cellWriteHandler = new CellWriteHandler() {
             @Override
             public void afterCellDispose(CellWriteHandlerContext context) {
