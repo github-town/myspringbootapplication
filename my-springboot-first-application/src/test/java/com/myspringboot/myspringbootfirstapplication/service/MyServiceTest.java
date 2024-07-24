@@ -42,8 +42,7 @@ public class MyServiceTest {
             System.out.println(accept.getRemoteAddress());
             try {
                 ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-                int read = 0;
-                read = accept.read(byteBuffer);
+                int read = accept.read(byteBuffer);
                 System.out.println(read);
 
                 String receive = new String(byteBuffer.array(), 0, byteBuffer.limit());
