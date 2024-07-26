@@ -2,6 +2,9 @@ package com.myspringboot.myspringbootfirstapplication.service;
 
 import com.myspringboot.myspringbootfirstapplication.domain.ExcelPojo;
 import lombok.extern.slf4j.Slf4j;
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.junit.Test;
 import org.junit.experimental.theories.internal.ParameterizedAssertionError;
 
@@ -169,5 +172,32 @@ public class MyServiceTest {
         System.out.println("before memory : " + l1);
         System.out.println("after memory : " + l2);
         System.out.println("thread memory : " + (l2 - l1));
+    }
+
+    @Test
+    public void test07(){
+        String chineseText = "你好，世界！";
+        String pinyin = convertToPinyin(chineseText);
+        System.out.println("Pinyin of \"" + chineseText + "\": " + pinyin);
+    }
+
+    private String convertToPinyin(String chineseText) {
+        StringBuilder pinyin = new StringBuilder();
+        HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
+        for (char c : chineseText.toCharArray()) {
+            try {
+                String[] pinyinArray = PinyinHelper.toHanyuPinyinStringArray(c, format);
+                if (pinyinArray != null && pinyinArray.length > 0) {
+                    pinyin.append(pinyinArray[0].replaceAll("[^a-zA-Z]", "")); // 去除非字母字符
+                } else {
+                    pinyin.append(c); // 如果不是汉字，直接追加原字符
+                }
+            } catch (BadHanyuPinyinOutputFormatCombination e) {
+                // 处理异常，如果发生异常可以根据实际情况进行处理
+                e.printStackTrace();
+                pinyin.append(c); // 异常时直接追加原字符
+            }
+        }
+        return pinyin.toString().toLowerCase(); // 转换为小写
     }
 }
