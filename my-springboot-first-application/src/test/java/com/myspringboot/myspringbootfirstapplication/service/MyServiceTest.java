@@ -1,6 +1,7 @@
 package com.myspringboot.myspringbootfirstapplication.service;
 
 import com.myspringboot.myspringbootfirstapplication.domain.ExcelPojo;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.experimental.theories.internal.ParameterizedAssertionError;
 
@@ -12,6 +13,7 @@ import java.nio.channels.SocketChannel;
 import java.util.concurrent.atomic.AtomicStampedReference;
 import java.util.stream.Stream;
 
+@Slf4j
 public class MyServiceTest {
 
     @Test
@@ -57,7 +59,7 @@ public class MyServiceTest {
                 accept.shutdownOutput();
                 accept.close();
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.error("ServerSocketChannel error", ex);
             }
         }
     }
