@@ -41,7 +41,7 @@ public class MyServiceTest {
         channel.socket().setSoTimeout(60000);
         channel.configureBlocking(true);
         channel.bind(new InetSocketAddress(9000));
-        System.out.println("启动9000端口");
+        System.out.println("启动9000端口!!!");
         for (;;){
             SocketChannel accept = channel.accept();
             System.out.println(accept.getRemoteAddress());
