@@ -194,7 +194,7 @@ public class MyServiceTest {
                 }
             } catch (BadHanyuPinyinOutputFormatCombination e) {
                 // 处理异常，如果发生异常可以根据实际情况进行处理
-                e.printStackTrace();
+                log.error("BadHanyuPinyinOutputFormatCombination error", e);
                 pinyin.append(c); // 异常时直接追加原字符
             }
         }
