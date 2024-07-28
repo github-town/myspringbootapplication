@@ -74,10 +74,10 @@ public class MyServiceTest {
         System.out.println(i==i2);
 
         try {
-           int a =  1/0;
-        }catch (ParameterizedAssertionError error){
+            int a = 1 / 0;
+        } catch (ParameterizedAssertionError error) {
             System.out.println("catched");
-        }finally {
+        } finally {
             System.out.println("fally runed");
         }
     }
