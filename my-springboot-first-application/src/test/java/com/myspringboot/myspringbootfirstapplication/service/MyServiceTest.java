@@ -176,7 +176,7 @@ public class MyServiceTest {
 
     @Test
     public void test07(){
-        String chineseText = "你好,世界!";
+        String chineseText = "你好世界!";
         String pinyin = convertToPinyin(chineseText);
         System.out.println("Pinyin of \"" + chineseText + "\": " + pinyin);
     }
