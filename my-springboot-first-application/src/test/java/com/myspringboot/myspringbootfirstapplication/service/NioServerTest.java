@@ -54,6 +54,7 @@ public class NioServerTest {
                         // 有数据可读
                         SocketChannel socketChannel = (SocketChannel) key.channel();
                         poolExecutor.submit(() -> processRequest(socketChannel));
+                        key.cancel();
                     }
 
                     // 处理完之后从 selectedKeys 中移除当前键，以免重复处理
@@ -74,7 +75,6 @@ public class NioServerTest {
                 // 客户端关闭连接
                 System.out.println("连接关闭: " + socketChannel.getRemoteAddress());
                 socketChannel.shutdownOutput();
-                socketChannel.close();
             } else {
                 String receivedData = new String(buffer.array()).trim();
                 System.out.println("收到数据: " + receivedData);
