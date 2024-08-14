@@ -54,7 +54,7 @@ public class NioServerTest {
                         // 有数据可读
                         SocketChannel socketChannel = (SocketChannel) key.channel();
                         poolExecutor.submit(() -> processRequest(socketChannel));
-                        key.cancel();
+                        key.cancel(); // 解除注册
                     }
 
                     // 处理完之后从 selectedKeys 中移除当前键，以免重复处理
