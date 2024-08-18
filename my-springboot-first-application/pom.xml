@@ -59,6 +59,11 @@
 		</dependency>
 		<!--客户端负载均衡loadbalancer-->
 		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>4.1.79.Final</version> <!-- 或者使用其他最新版本 -->
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-loadbalancer</artifactId>
 		</dependency>
