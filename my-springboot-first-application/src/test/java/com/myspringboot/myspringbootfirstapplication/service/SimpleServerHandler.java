@@ -16,6 +16,7 @@ public class SimpleServerHandler extends SimpleChannelInboundHandler<String> {
         stringBuilder.append("success");
         stringBuilder.append("你好，客户端！你发送的数据是: " + msg);
         ctx.writeAndFlush(stringBuilder.toString());
+        ctx.close();
     }
 
     @Override

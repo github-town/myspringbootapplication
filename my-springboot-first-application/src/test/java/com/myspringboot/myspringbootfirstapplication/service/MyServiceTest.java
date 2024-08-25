@@ -34,6 +34,9 @@ public class MyServiceTest {
         System.out.println(str3.equals(str4));
         System.out.println(str3.hashCode());
         System.out.println(str4.hashCode());
+        System.out.println("hello,\rworld");
+        System.out.println("hello,\nworld");
+        System.out.println("hello,\r\nworld");
     }
 
     public static void main(String[] args) throws IOException {
@@ -168,10 +171,10 @@ public class MyServiceTest {
         thread.start();
         Thread.sleep(500);
         long l2 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-        System.out.println("total memory : " + Runtime.getRuntime().totalMemory());
-        System.out.println("before memory : " + l1);
-        System.out.println("after memory : " + l2);
-        System.out.println("thread memory : " + (l2 - l1));
+        System.out.println("total memory : " + Runtime.getRuntime().totalMemory()/1024/1024);
+        System.out.println("before memory : " + l1/1024/1024);
+        System.out.println("after memory : " + l2/1024/1024);
+        System.out.println("thread memory : " + (l2 - l1)/1024/1024);
     }
 
     @Test

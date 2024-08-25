@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.util.Iterator;
 import java.util.concurrent.*;
 
@@ -46,7 +43,7 @@ public class NioServerTest {
                     SelectionKey key = selectIterator.next();
                     if (key.isValid() && key.isAcceptable()) {
                         // 接受连接
-                        SocketChannel socketChannel = serverSocketChannel.accept();
+                        SocketChannel socketChannel = ((ServerSocketChannel) key.channel()).accept();
                         socketChannel.configureBlocking(false); // 设置为非阻塞模式
                         socketChannel.register(selector, SelectionKey.OP_READ);
                         System.out.println("新连接: " + socketChannel.getRemoteAddress());
